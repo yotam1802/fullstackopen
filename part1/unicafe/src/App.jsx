@@ -3,11 +3,15 @@ import { useState } from 'react'
 const Statistics = ({ all, average, positive }) => {
   return (
     <>
-        all {all}
-        <br></br>
-        average {average}
-        <br></br>
-        positive {positive}%
+      <tr>
+        <td>all {all}</td>
+      </tr>
+      <tr>
+        <td>average {average}</td>
+      </tr>
+      <tr>
+        <td>positive {positive}%</td>
+      </tr>
     </>
   )
 }
@@ -52,17 +56,20 @@ const App = () => {
 
       <h1>statistics</h1>
       
-      <div>
-        <p>
-          good {good}
-          <br></br>
-          neutral {neutral}
-          <br></br>
-          bad {bad}
-          <br></br>
+      <table>
+        <tbody>
+          <tr>
+            <td>good {good}</td>
+          </tr>
+          <tr>
+            <td>neutral {neutral}</td>
+          </tr>
+          <tr>
+            <td>bad {bad}</td>
+          </tr>
           <Statistics all={all} average={average} positive={positive}/>
-        </p>
-      </div>
+        </tbody>
+      </table>
     </div>
   )
 }
