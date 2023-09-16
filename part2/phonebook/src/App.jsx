@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import Filter from './Filter'
 import PersonForm from './PersonForm'
 import Numbers from './Numbers'
-import axios from '../node_modules/axios'
+import peopleService from './services/people'
 
 const App = () => {
   const [persons, setPersons] = useState([])
@@ -12,11 +12,8 @@ const App = () => {
   const [newFilter, setNewFilter] = useState('')
 
   useEffect(() => {
-    axios.get('http://localhost:3001/persons')
-      .then((response) => {
-        console.log(response)
-        setPersons(response.data)
-      })
+    peopleService.getAll()
+      .then(initialPeople => setPersons(initialPeople))
   }, [])
 
   const handleNameInput = (e) => {
@@ -34,7 +31,7 @@ const App = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    const newPerson = {name: newName, phoneNumber: newPhone, id: persons.length + 1}
+    const newPerson = {name: newName, phoneNumber: newPhone, }
     if (persons.some((person) => person.name === newPerson.name)) {
       setNewName('')
       setNewPhone('')
@@ -42,9 +39,12 @@ const App = () => {
       return;
     }
 
-    setPersons(persons.concat(newPerson))
-    setNewName('')
-    setNewPhone('')
+    peopleService.create(newPerson)
+      .then(returnedPerson => {
+        setPersons(persons.concat(returnedPerson))
+        setNewName('')
+        setNewPhone('')
+      })
   }
 
   const personsToShow = showAll ? 
