@@ -29,6 +29,15 @@ const App = () => {
     e.target.value == '' ? setShowAll(true) : setShowAll(false)
   }
 
+  const handleDelete = (id) => {
+    const person = persons.find((person) => person.id === id)
+
+    if (confirm(`Delete ${person.name} ?`)) {
+      peopleService.remove(id)
+        .then(setPersons(persons.filter((person) => person.id !== id)))
+    }
+  }
+
   const handleSubmit = (e) => {
     e.preventDefault()
     const newPerson = {name: newName, phoneNumber: newPhone, }
@@ -59,7 +68,7 @@ const App = () => {
       <h2>Add a new</h2>
       <PersonForm handleSubmit={handleSubmit} nameValue={newName} handleNameInput={handleNameInput} phoneValue={newPhone} handlePhoneInput={handlePhoneInput}/>
       <h2>Numbers</h2>
-      <Numbers personsToShow={personsToShow}/>
+      <Numbers personsToShow={personsToShow} handleDelete={handleDelete}/>
     </div>
   )
 }
