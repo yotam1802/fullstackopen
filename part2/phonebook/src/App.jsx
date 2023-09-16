@@ -3,6 +3,7 @@ import Filter from './Filter'
 import PersonForm from './PersonForm'
 import Numbers from './Numbers'
 import peopleService from './services/people'
+import Notification from './Notification'
 
 const App = () => {
   const [persons, setPersons] = useState([])
@@ -10,6 +11,7 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newPhone, setNewPhone] = useState('')
   const [newFilter, setNewFilter] = useState('')
+  const [notification, setNotification] = useState({message: '', type: ''})
 
   useEffect(() => {
     peopleService.getAll()
@@ -47,7 +49,17 @@ const App = () => {
       if (confirm(`${person.name} is already added to phonebook, replace the old number with a new one?`)) {
         const changedPerson = {...person, phoneNumber: newPerson.phoneNumber}
         peopleService.update(person.id, changedPerson)
-          .then((changedPerson) => setPersons(persons.map((person) => person.id !== changedPerson.id ? person : changedPerson)))
+          .then((changedPerson) => {
+            setPersons(persons.map((person) => person.id !== changedPerson.id ? person : changedPerson))
+          })
+          .catch(error => {
+            console.log(`An error occured: ${error}`)
+            setNotification({message: `Information of ${changedPerson.name} has already been removed from server`, type: 'error'})
+            setTimeout(() => {
+              setNotification({message: '', type: ''})
+            }, 5000)
+            setPersons(persons.filter((person) => person.id !== changedPerson.id))
+          })
       }
 
       setNewName('')
@@ -58,6 +70,10 @@ const App = () => {
     peopleService.create(newPerson)
       .then(returnedPerson => {
         setPersons(persons.concat(returnedPerson))
+        setNotification({message: `Added ${returnedPerson.name}`, type: 'notification'})
+        setTimeout(() => {
+          setNotification({message: '', type: ''})
+        }, 5000)
         setNewName('')
         setNewPhone('')
       })
@@ -71,6 +87,8 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={notification.message} type={notification.type}/>
+      <br />
       <Filter filterValue={newFilter} handleFilterInput={handleFilterInput}/>
       <h2>Add a new</h2>
       <PersonForm handleSubmit={handleSubmit} nameValue={newName} handleNameInput={handleNameInput} phoneValue={newPhone} handlePhoneInput={handlePhoneInput}/>
