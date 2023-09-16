@@ -41,10 +41,17 @@ const App = () => {
   const handleSubmit = (e) => {
     e.preventDefault()
     const newPerson = {name: newName, phoneNumber: newPhone, }
+
     if (persons.some((person) => person.name === newPerson.name)) {
+      const person = persons.find((person) => person.name === newPerson.name)
+      if (confirm(`${person.name} is already added to phonebook, replace the old number with a new one?`)) {
+        const changedPerson = {...person, phoneNumber: newPerson.phoneNumber}
+        peopleService.update(person.id, changedPerson)
+          .then((changedPerson) => setPersons(persons.map((person) => person.id !== changedPerson.id ? person : changedPerson)))
+      }
+
       setNewName('')
       setNewPhone('')
-      alert(`${newPerson.name} is already added to phonebook`)
       return;
     }
 
