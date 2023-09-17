@@ -18,6 +18,10 @@ const App = () => {
       })
   }, [])
 
+  if (!countries) {
+    return null
+  }
+
   useEffect(() => {
     const exactName = countries.filter((country) => country.name.common.toUpperCase() === search.toUpperCase())
     if (exactName.length !== 0) {
@@ -33,10 +37,16 @@ const App = () => {
     setSearch(e.target.value)
   }
 
+  const handleShow = (country) => () => {
+    return (
+      setCountriesToShow([country])
+    )
+  }
+
   return (
     <div>
       <Search value={search} handleChange={handleSearchChange}/>
-      <SearchResults countries={countriesToShow}/>
+      <SearchResults countries={countriesToShow} handleShow={handleShow}/>
     </div>
   )
 }

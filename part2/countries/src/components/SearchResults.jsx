@@ -1,4 +1,4 @@
-const SearchResults = ({countries}) => {
+const SearchResults = ({countries, handleShow}) => {
     if (countries === "Too many matches, specify another filter") {
         return (<div>Too many matches, specify another filter</div>)
     } 
@@ -29,7 +29,11 @@ const SearchResults = ({countries}) => {
     return (
         <ul>
             {countries.map((country) => {
-                return <li key={country.name.common}>{country.name.common}</li>
+                return (
+                    <li key={country.name.common}>
+                        {country.name.common} <button onClick={handleShow(country)}>show</button>
+                    </li>
+                )
             })}
         </ul>
     )
