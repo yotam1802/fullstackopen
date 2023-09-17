@@ -1,3 +1,5 @@
+import Weather from "./Weather"
+
 const SearchResults = ({countries, handleShow}) => {
     if (countries === "Too many matches, specify another filter") {
         return (<div>Too many matches, specify another filter</div>)
@@ -15,13 +17,14 @@ const SearchResults = ({countries, handleShow}) => {
                     <br />
                     area {country.area}
                 </div>
-                <h3>languages:</h3>
+                <h4>languages:</h4>
                 <ul>
                     {languages.map((language) => {
                         return <li key={`${country.name.common}/${language}`}>{language}</li>
                     })}
                 </ul>
-                <div><img src={country.flags.png}/></div>
+                <img src={country.flags.png}/>
+                <Weather city={country.capital} />
             </div>
         )
     }

@@ -4,7 +4,6 @@ import SearchResults from "./components/SearchResults"
 import { useState } from "react"
 import countryService from './services/countries'
 
-
 const App = () => {
   const [search, setSearch] = useState('')
   const [countries, setCountries] = useState([])
@@ -18,10 +17,6 @@ const App = () => {
       })
   }, [])
 
-  if (!countries) {
-    return null
-  }
-
   useEffect(() => {
     const exactName = countries.filter((country) => country.name.common.toUpperCase() === search.toUpperCase())
     if (exactName.length !== 0) {
@@ -32,6 +27,11 @@ const App = () => {
     const searchCountries = countries.filter((country) => country.name.common.toUpperCase().startsWith(search.toUpperCase()))
     searchCountries.length > 10 ? setCountriesToShow("Too many matches, specify another filter") : setCountriesToShow(searchCountries)
   }, [search])
+
+  if (countries.length === 0) {
+    console.log('Loading....')
+    return null
+  }
 
   const handleSearchChange = (e) => {
     setSearch(e.target.value)
