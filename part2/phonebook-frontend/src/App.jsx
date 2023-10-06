@@ -46,11 +46,6 @@ const App = () => {
             setNewNumber('')
           })
       }
-
-
-
-
-
       return
     }
 
